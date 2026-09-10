@@ -41,15 +41,15 @@ mechanics-agent-skills/
 
 ```bash
 # Search mechanics papers across Crossref, OpenAlex, arXiv
-python mechanics-scoping-review/scripts/search_mechanics_papers.py "penny-shaped crack Fabrikant" --limit 10
+python mechanics-scoping-review/scripts/search_mechanics_papers.py "anisotropic elasticity crack problem" --limit 10
 
 # Traverse citation graph
-python mechanics-scoping-review/scripts/traverse_mechanics_citations.py "10.1016/j.ijsolstr.2015.10.026"
+python mechanics-scoping-review/scripts/traverse_mechanics_citations.py "10.1016/j.engfracmech.2020.107000"
 
 # Find open access full text
-python mechanics-scoping-review/scripts/find_oa_pdf.py "10.1016/j.ijsolstr.2015.10.026"
+python mechanics-scoping-review/scripts/find_oa_pdf.py "10.1016/j.engfracmech.2020.107000"
 ```
 
-## Author & License
+## License
 
-Maintained by yq04. Licensed under the MIT License.
+Licensed under the MIT License.
