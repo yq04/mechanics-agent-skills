@@ -1,91 +1,58 @@
 ---
 name: mechanics-scoping-review
-description: Rigorous PRISMA-ScR systematic and scoping literature review orchestration specifically customized for Solid Mechanics, Fracture Mechanics, and Elasticity. Replaces biomedical PubMed APIs with open mechanics engineering backends (Crossref, OpenAlex, arXiv, Semantic Scholar), anchors records via canonical DOI, provides mechanics-specific screening rubrics (constitutive symmetry, defect geometry, potential representations, SIF/COD fields), supports subagent-driven parallel batch screening, backward/forward citation snowballing, and evidence synthesis matrices.
-when_to_use: When conducting systematic or scoping literature reviews in solid mechanics, elasticity, or fracture mechanics; when researching analytical/semi-analytical/numerical solutions for cracks, inclusions, or contact problems; when benchmarking mechanical interaction theories (BEM, FEM, analytical potentials); when establishing screening rubrics or traversing citation networks.
-version: 2.1.0
+description: Rigorous PRISMA-ScR systematic and scoping literature review orchestration for Solid Mechanics, Fracture Mechanics, and Elasticity. Replaces biomedical PubMed APIs with engineering & mathematical backends (Crossref, OpenAlex, arXiv, Semantic Scholar), anchors records via canonical DOI, provides 5D mechanics screening rubrics (constitutive symmetry, defect geometry, potential theory, interaction models, output fields), multi-hop citation snowballing with Main Path Analysis (SPC), Mermaid network genealogies, evidence synthesis matrices, and PRISMA flowcharts. Use when conducting scoping reviews, surveying fracture mechanics literature, benchmarking analytical methods, or analyzing academic citation lineages.
 metadata:
-  domain: Solid Mechanics / Fracture Mechanics / Applied Mathematics
-  framework: PRISMA-ScR Protocol
-  backends: Crossref REST API, OpenAlex API, arXiv API, Unpaywall API
+  version: "3.0.0"
+  domain: "Solid Mechanics / Fracture Mechanics / Applied Mathematics"
+  framework: "PRISMA-ScR Protocol"
 ---
 
 # Mechanics Scoping Review: Systematic Literature Workflow
 
-## 1. Overview & Core Engineering Methodology
+Production-grade scoping and systematic review pipeline engineered specifically for theoretical and computational solid mechanics.
 
-Theoretical solid mechanics and fracture mechanics require rigorous mathematical and physical auditing of literature. Standard superficial web searches frequently miss foundational exact solutions or confuse disparate constitutive models.
+## 1. Core Engineering Workflow
+1. **Multi-Source DOI-Anchored Retrieval**: Queries Crossref, OpenAlex, arXiv, and Semantic Scholar with mechanics taxonomy expansion.
+2. **5-Dimensional Screening Rubric**: Evaluates Constitutive Symmetry (Isotropic to Anisotropic/TI), Defect Geometry (penny-shaped, coplanar, parallel), Analytical Method (potentials, dual integrals, BEM), Interaction Theory (Kachanov, superposition), and Output Fields (SIF, COD, T-stress, $J$-integral). Scores 0-10 with transparent exclusion logs.
+3. **Citation Snowballing & Main Path Analysis (SPC)**: Backward (references) and forward (citations) traversal, Search Path Count algorithmic backbone extraction, and publication-ready Mermaid citation flowcharts.
+4. **Evidence Synthesis & PRISMA Reporting**: Generates standard PRISMA-ScR flowcharts in Mermaid, comprehensive Markdown Evidence Synthesis Matrices, and draft review sections with clean BibTeX references.
 
-This skill implements a standardized **PRISMA-ScR workflow** engineered specifically for solid mechanics:
-1. **DOI-Anchored Multi-Source Retrieval**: Queries Crossref (publisher metadata), OpenAlex (global scholarly graph), and arXiv (applied math preprints) with zero biomedical bias.
-2. **Mechanics-Specific Screening Rubric**: Evaluates constitutive symmetry (anisotropic, isotropic), defect topology (planar cracks, inclusions, notches), theoretical formulation (potential theory, dual integral equations, boundary integral equations), and target mechanical fields (SIF, COD, stress tensor, strain energy).
-3. **Two-Stage Screening & Parallel Subagent Delegation**: Supports high-throughput, context-isolated batch screening via subagents with consolidation checkpoints.
-4. **Citation Network Snowballing**: Follows backward references and forward citations from seminal seed papers to map the entire theoretical lineage.
-5. **Evidence Synthesis Matrix**: Produces comparative analytical-versus-numerical benchmark tables and establishes incontrovertible research gaps.
+## 2. Quick CLI Usage
 
-## 2. Directory Layout and Tool Ecosystem
-
-```text
-mechanics-scoping-review/
-|-- SKILL.md                              # Main orchestration instructions (this file)
-|-- references/
-|   |-- scoping_review_protocol.md        # PRISMA-ScR protocol & phase transitions
-|   |-- mechanics_screening_rubrics.md    # Solid mechanics evaluation criteria & scoring scale
-|   |-- subagent_orchestration_guide.md   # Parallel delegation & JSON merge protocols
-|   `-- database_api_strategies.md        # Multi-backend API fallback & rate limits
-`-- scripts/
-    |-- search_mechanics_papers.py        # CLI for Crossref + OpenAlex + arXiv search
-    |-- traverse_mechanics_citations.py   # CLI for backward/forward citation snowballing
-    `-- find_oa_pdf.py                    # CLI for Unpaywall & OpenAlex OA PDF retrieval
+### End-to-End Scoping Review
+```powershell
+# Execute complete PRISMA-ScR review with taxonomy expansion, screening, BibTeX & synthesis
+mechanics-review "interacting penny-shaped cracks in transversely isotropic media" --expand --output-dir review_artifacts
 ```
 
-## 3. Step-by-Step Review Execution
+### Targeted Search, Citations & Extraction
+```powershell
+# Search literature across Crossref, OpenAlex, and arXiv with query expansion
+mechanics-search "transversely isotropic crack interaction" --expand --format markdown
 
-### Step 1: Define Topic Scope & Calibrate Rubric
-- Consult `references/mechanics_screening_rubrics.md` to establish the target parameters.
-- Define explicit inclusion/exclusion criteria:
-  - *Target Constitutive*: Linear elastic, anisotropic or isotropic media.
-  - *Target Defect*: Discrete cracks, notches, or inclusions.
-  - *Target Theory*: Analytical boundary value methods, integral transforms, or semi-analytical formulations.
-  - *Exclusion*: Purely empirical observations, non-continuum fluid cavitation, biological soft tissues.
+# Multi-hop citation snowballing with Mermaid export
+mechanics-citations "10.1016/0020-7683(89)90001-X" --limit 20 --mermaid citation_tree.mmd
 
-### Step 2: Multi-Source Literature Retrieval
-Execute `search_mechanics_papers.py` with domain-optimized keywords:
-```bash
-python mechanics-scoping-review/scripts/search_mechanics_papers.py \
-  "anisotropic elasticity crack problem analytical solution" \
-  --limit 20 \
-  --output literature_search.json \
-  --markdown LITERATURE_SEARCH_TABLE.md
+# Check Open Access PDF availability
+mechanics-oa "10.1016/0020-7683(89)90001-X"
 ```
 
-### Step 3: Screening & Evaluation
-- For small paper sets (< 25 papers): Perform direct abstract evaluation using the 0-10 scoring rubric.
-- For large paper sets (>= 25 papers): Follow `references/subagent_orchestration_guide.md` to partition into batches and dispatch parallel subagents.
-- Partition results into:
-  - **Priority Papers (Score >= 7)**: Selected for deep dive and citation snowballing.
-  - **Background Papers (Score 4 - 6)**: Retained for contextual comparison.
-  - **Excluded Papers (Score 0 - 3)**: Documented with explicit exclusion rationale.
+## 3. Five-Dimensional Mechanics Rubric (0 - 10)
 
-### Step 4: Citation Network Snowballing
-Take key seed papers and traverse the citation network:
-```bash
-python mechanics-scoping-review/scripts/traverse_mechanics_citations.py \
-  "10.1016/j.engfracmech.2020.107000" \
-  --limit 25 \
-  --output citation_network.json
-```
+| Dimension | Target Scope (High: 2 pts) | Contextual (1 pt) | Excluded (0 pts) |
+|---|---|---|---|
+| **Constitutive** | Transversely Isotropic (TI), Orthotropic, Anisotropic, Piezoelectric | Isotropic linear elasticity | Biological tissue, orthopedic implants, fluid cavitation |
+| **Geometry** | Interacting cracks (coplanar, parallel non-coplanar), penny-shaped, elliptical | 2D single crack, generic notch | Macro-void cavitation without crack geometry |
+| **Method** | Potential theory (Fabrikant, Papkovich-Neuber, Muskhelishvili), dual integrals | Numerical BEM/XFEM with benchmark | Black-box commercial FEA without analytical equations |
+| **Interaction** | Kachanov self-consistent traction method, transmission matrices | Far-field or dipole approximations | Purely empirical phenomenological damage |
+| **Fields** | Stress Intensity Factors ($K_I, K_{II}, K_{III}$), COD ($w(r)$), $J$-integral | Global stress concentration | Purely qualitative experimental acoustics |
 
-### Step 5: Full-Text Retrieval & Deep Dive Data Extraction
-For priority papers, locate legal Open Access full texts:
-```bash
-python mechanics-scoping-review/scripts/find_oa_pdf.py "10.1016/j.engfracmech.2020.107000"
-```
-Extract governing formulas, displacement potentials, transmission coefficients, and benchmark validation tables.
+- **Included / Priority**: Score $\ge 7$
+- **Contextual / Background**: Score 4 - 6
+- **Excluded**: Score 0 - 3 (with explicit rationale logged)
 
-### Step 6: Evidence Synthesis Matrix
-Construct the definitive scoping review synthesis table in Markdown format:
-| Reference | Medium | Defect Geometry | Analytical Method | Field Quantities | SIF Closed-Form? | Numerical Benchmarks | Evidence Level |
-|---|---|---|---|---|---|---|---|
-| Classical Study A | Isotropic | Coplanar defect array | Integral transforms | Displacements, Stresses | Yes (Exact) | Standard verification | Foundational (10/10) |
-| Classical Study B | Anisotropic | 3D planar crack | Potential theory | Singular stress fields | Semi-analytical | Convergence verified | High (8/10) |
-| Benchmark Study C | Layered medium | Interfacial defect | Boundary integral | Traction distribution | Numerical / BEM | Experimental match | Contextual (6/10) |
+## 4. References & Protocols
+- [scoping_review_protocol.md](references/scoping_review_protocol.md): Full PRISMA-ScR phase transitions.
+- [mechanics_screening_rubrics.md](references/mechanics_screening_rubrics.md): Granular scoring criteria.
+- [subagent_orchestration_guide.md](references/subagent_orchestration_guide.md): Parallel batch execution guide.
+- [database_api_strategies.md](references/database_api_strategies.md): API rate limits and polite pool headers.

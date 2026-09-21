@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 """
-find_oa_pdf.py
-==============
-Look up free Open Access full text / PDF for a given DOI using Unpaywall and OpenAlex.
-Refactored for mechanics-agent-skills v3.0.0 (delegating to mechanics_skills core).
+review_mechanics_paper.py
+=========================
+CLI wrapper for simulated mechanics peer review and 5D soundness audit.
 """
 
-import os
 import sys
 from pathlib import Path
 
-# Ensure src/ is on sys.path
 _repo_root = Path(__file__).resolve().parent.parent.parent
 _vendor_dir = Path(__file__).resolve().parent / "_vendor"
 if _vendor_dir.is_dir() and str(_vendor_dir) not in sys.path:
@@ -19,19 +16,12 @@ _src_dir = _repo_root / "src"
 if _src_dir.is_dir() and str(_src_dir) not in sys.path:
     sys.path.insert(0, str(_src_dir))
 
-from mechanics_skills.cli import find_oa, oa_cli
-
-
-def find_pdf_for_doi(doi):
-    """Legacy compatibility function for finding OA PDF."""
-    res = find_oa(doi)
-    return res.to_dict()
+from mechanics_skills.cli import peer_review_cli
 
 
 def main():
-    sys.exit(oa_cli())
+    sys.exit(peer_review_cli())
 
 
 if __name__ == "__main__":
     main()
-

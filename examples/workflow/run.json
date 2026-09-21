@@ -1,0 +1,49 @@
+{
+  "run_id": "workflow-001",
+  "topic": "Asymptotic Stress Fields and SIF Near Collinear Cracks in Elastic Solids",
+  "offline": true,
+  "sources": [
+    "crossref",
+    "openalex"
+  ],
+  "papers": [
+    {
+      "title": "Exact Potential Solutions for Collinear Cracks in Transversely Isotropic Solids",
+      "doi": "10.1016/j.engfracmech.2021.1001",
+      "authors": [
+        "A. Elastician",
+        "B. Mechanician"
+      ],
+      "year": 2021,
+      "journal": "Engineering Fracture Mechanics",
+      "citations": 45,
+      "abstract": "Exact analytical solutions for collinear cracks in transversely isotropic elastic media using Fabrikant potentials to determine Mode I stress intensity factors K_I and COD fields.",
+      "sources": [
+        "crossref",
+        "openalex"
+      ]
+    },
+    {
+      "title": "Asymptotic Analysis of Crack Interaction Under Remote Tension",
+      "doi": "10.1007/s10409-019-3003",
+      "authors": [
+        "D. Researcher"
+      ],
+      "year": 2019,
+      "journal": "Acta Mechanica Sinica",
+      "citations": 28,
+      "abstract": "Boundary element analysis of crack interaction comparing with Kachanov method and analytical Westergaard solutions.",
+      "sources": [
+        "crossref"
+      ]
+    }
+  ],
+  "manuscript_path": "examples/polishing/manuscript.md",
+  "conventions_path": "examples/polishing/conventions.json",
+  "figure_spec_path": "examples/figures/sif/spec.json",
+  "journal": "jmps",
+  "options": {
+    "sif_val": 1.25,
+    "baseline_val": 1
+  }
+}

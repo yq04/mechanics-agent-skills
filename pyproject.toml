@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.20"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mechanics-agent-skills"
+version = "3.1.0"
+description = "Evidence-anchored research tools for solid mechanics, fracture mechanics, and elasticity"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Academic Mechanics Research Team" }
+]
+dependencies = []
+
+[project.optional-dependencies]
+http = ["httpx>=0.24.0"]
+pdf = ["pymupdf>=1.22.0"]
+figure = ["matplotlib>=3.6.0", "numpy>=1.22.0"]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.20.0"
+]
+
+[project.scripts]
+mechanics-skills = "mechanics_skills.cli:main"
+mechanics-search = "mechanics_skills.cli:search_cli"
+mechanics-citations = "mechanics_skills.cli:citations_cli"
+mechanics-oa = "mechanics_skills.cli:oa_cli"
+mechanics-extract = "mechanics_skills.cli:extract_cli"
+mechanics-review = "mechanics_skills.cli:review_cli"
+mechanics-figure = "mechanics_skills.cli:figure_cli"
+mechanics-polish = "mechanics_skills.cli:polish_cli"
+mechanics-peer-review = "mechanics_skills.cli:peer_review_cli"
+mechanics-integrity = "mechanics_skills.cli:integrity_cli"
+mechanics-workflow = "mechanics_skills.cli:workflow_cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mechanics_skills"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "src", "openalex-database/scripts", "mechanics-scoping-review/scripts", "mechanics-evidence-extraction/scripts", "mechanics-figure/scripts", "mechanics-paper-polishing/scripts", "mechanics-paper-reviewer/scripts"]
+addopts = "-m 'not live'"
+markers = [
+    "live: network smoke tests requiring external APIs"
+]

@@ -5,7 +5,17 @@ Helper functions for common OpenAlex query patterns.
 Provides high-level functions for typical research queries.
 """
 
-from typing import List, Dict, Optional, Any
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+# Ensure scripts dir and src/ are on sys.path
+_script_dir = Path(__file__).resolve().parent
+_src_dir = _script_dir.parent.parent / "src"
+for p in (str(_script_dir), str(_src_dir)):
+    if p not in sys.path:
+        sys.path.insert(0, p)
+
 from openalex_client import OpenAlexClient
 
 
@@ -43,10 +53,10 @@ def find_author_works(
     # Step 2: Get works by author
     works_params = {
         'filter': f'authorships.author.id:{author_id}',
-        'per-page': 200
+        'per-page': 100
     }
 
-    if limit and limit <= 200:
+    if limit and limit <= 100:
         works_params['per-page'] = limit
         response = client._make_request('/works', works_params)
         return response.get('results', [])
@@ -89,10 +99,10 @@ def find_institution_works(
     # Step 2: Get works from institution
     works_params = {
         'filter': f'authorships.institutions.id:{inst_id}',
-        'per-page': 200
+        'per-page': 100
     }
 
-    if limit and limit <= 200:
+    if limit and limit <= 100:
         works_params['per-page'] = limit
         response = client._make_request('/works', works_params)
         return response.get('results', [])
@@ -124,13 +134,13 @@ def find_highly_cited_recent_papers(
     params = {
         'filter': f'publication_year:{years}',
         'sort': 'cited_by_count:desc',
-        'per-page': min(limit, 200)
+        'per-page': min(limit, 100)
     }
 
     if topic:
         params['search'] = topic
 
-    if limit <= 200:
+    if limit <= 100:
         response = client._make_request('/works', params)
         return response.get('results', [])
     else:
@@ -163,10 +173,10 @@ def get_open_access_papers(
     params = {
         'search': search_term,
         'filter': filter_str,
-        'per-page': min(limit, 200)
+        'per-page': min(limit, 100)
     }
 
-    if limit <= 200:
+    if limit <= 100:
         response = client._make_request('/works', params)
         return response.get('results', [])
     else:
@@ -254,7 +264,7 @@ def analyze_research_output(
         filter_params=filter_params,
         per_page=1
     )
-    total_works = works_response['meta']['count']
+    total_works = works_response.get('meta', {}).get('count', 0)
 
     # Works by year
     trends = client.group_by(
@@ -275,7 +285,7 @@ def analyze_research_output(
         filter_params={**filter_params, 'is_oa': 'true'},
         per_page=1
     )
-    oa_count = oa_works['meta']['count']
+    oa_count = oa_works.get('meta', {}).get('count', 0)
     oa_percentage = (oa_count / total_works * 100) if total_works > 0 else 0
 
     return {
@@ -288,19 +298,3 @@ def analyze_research_output(
         'top_topics': topics[:10]  # Top 10 topics
     }
 
-
-if __name__ == "__main__":
-    # Example usage
-    import json
-
-    client = OpenAlexClient(email="your-email@example.com")
-
-    # Find works by author
-    print("\n=== Finding works by author ===")
-    works = find_author_works("Einstein", client, limit=5)
-    print(f"Found {len(works)} works")
-
-    # Analyze research output
-    print("\n=== Analyzing institution research output ===")
-    analysis = analyze_research_output('institution', 'MIT', client)
-    print(json.dumps(analysis, indent=2))

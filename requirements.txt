@@ -1,0 +1,16 @@
+# mechanics-agent-skills: Requirements Specification
+# Core framework runtime has ZERO third-party dependencies (strictly Python stdlib: urllib, json, xml, etc.).
+
+# Optional extras for enhanced performance & features:
+# HTTP transport enhancement (optional, falls back to urllib):
+# httpx>=0.24.0
+
+# PDF text & layout extraction (optional):
+# pymupdf>=1.22.0
+
+# Development, testing, and linting:
+# pytest>=7.0.0
+
+# Publication visualization (optional):
+# matplotlib>=3.6.0
+# numpy>=1.22.0

@@ -1,0 +1,11 @@
+{
+  "stress_components": "cauchy",
+  "sign_convention": "tension_positive",
+  "sif_normalization": "standard",
+  "displacement_definition": "total_cod_2w",
+  "unit_scales": {
+    "stress": "MPa",
+    "length": "mm",
+    "sif": "MPa*sqrt(m)"
+  }
+}
