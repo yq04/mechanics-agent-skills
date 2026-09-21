@@ -5,12 +5,12 @@ Configuration module for mechanics-agent-skills.
 import os
 from dataclasses import dataclass
 
-DEFAULT_EMAIL = os.environ.get("MECHANICS_EMAIL", "academic_researcher@mechanics.edu")
+DEFAULT_EMAIL = os.environ.get("MECHANICS_EMAIL", "")
 DEFAULT_TIMEOUT = float(os.environ.get("MECHANICS_TIMEOUT", "30.0"))
 DEFAULT_MAX_RETRIES = int(os.environ.get("MECHANICS_RETRIES", "3"))
 DEFAULT_USER_AGENT = os.environ.get(
     "MECHANICS_USER_AGENT",
-    f"Mozilla/5.0 (compatible; MechanicsSkills/3.0.0; +mailto:{DEFAULT_EMAIL})"
+    f"MechanicsAgentSkills/3.1.0" + (f" (mailto:{DEFAULT_EMAIL})" if DEFAULT_EMAIL else "")
 )
 
 # Domain-specific rate limits (requests per second)
@@ -33,14 +33,18 @@ class Settings:
 
     @classmethod
     def from_env(cls) -> "Settings":
+        email_val = os.environ.get("MECHANICS_EMAIL", DEFAULT_EMAIL)
+        ua_val = os.environ.get(
+            "MECHANICS_USER_AGENT",
+            f"MechanicsAgentSkills/3.1.0" + (f" (mailto:{email_val})" if email_val else "")
+        )
         return cls(
-            email=os.environ.get("MECHANICS_EMAIL", DEFAULT_EMAIL),
+            email=email_val,
             timeout=float(os.environ.get("MECHANICS_TIMEOUT", str(DEFAULT_TIMEOUT))),
             max_retries=int(os.environ.get("MECHANICS_RETRIES", str(DEFAULT_MAX_RETRIES))),
-            user_agent=os.environ.get("MECHANICS_USER_AGENT", DEFAULT_USER_AGENT),
+            user_agent=ua_val,
             http_backend=os.environ.get("MECHANICS_HTTP_BACKEND", "auto"),
         )
 
 
 settings = Settings.from_env()
-

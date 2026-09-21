@@ -90,6 +90,7 @@ def _get_default_papers() -> List[PaperRecord]:
             citations=45,
             abstract="Exact analytical solutions for collinear cracks in transversely isotropic elastic media using Fabrikant potentials to determine Mode I stress intensity factors K_I and COD fields.",
             sources=["crossref", "openalex"],
+            extra={"is_synthetic_demo": True},
         ),
         PaperRecord(
             title="Asymptotic Analysis of Crack Interaction Under Remote Tension",
@@ -215,10 +216,10 @@ class MechanicsWorkflow:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         tmp_path = self.manifest_path.with_suffix(".tmp")
         tmp_path.write_text(json.dumps(self.manifest, indent=2, ensure_ascii=False), encoding="utf-8")
-        if self.manifest_path.exists():
-            self.manifest_path.unlink()
-        tmp_path.rename(self.manifest_path)
-        shutil.copy2(self.manifest_path, self.compat_manifest_path)
+        tmp_path.replace(self.manifest_path)
+        compat_tmp = self.compat_manifest_path.with_suffix(".tmp")
+        shutil.copy2(self.manifest_path, compat_tmp)
+        compat_tmp.replace(self.compat_manifest_path)
 
     def run(
         self,
@@ -391,7 +392,7 @@ class MechanicsWorkflow:
                 inputs["manuscript"] = str(pol_ms)
             elif orig_ms.is_file():
                 inputs["manuscript"] = str(orig_ms)
-            fig_manifest = self.output_dir / "figures" / "figure_manifest.json"
+            fig_manifest = self.output_dir / "figures" / "figure.manifest.json"
             if fig_manifest.is_file():
                 inputs["figure_manifest"] = str(fig_manifest)
             if "options" in cfg:
@@ -506,7 +507,7 @@ class MechanicsWorkflow:
 
         for p in papers:
             text = f"{p.title}\n\n{p.abstract}"
-            cards.extend(extract_evidence_from_text(text, document_title=p.title, doi=p.doi, page_number=1))
+            cards.extend(extract_evidence_from_text(text, document_title=p.title, doi=p.doi, page_number=None, source_type="abstract"))
 
         cards_file = out_dir / "evidence_cards.json"
         card_dicts = [c.to_dict() for c in cards]
@@ -551,8 +552,8 @@ class MechanicsWorkflow:
         spec_file.write_text(json.dumps(spec_data, indent=2, ensure_ascii=False), encoding="utf-8")
 
         artifacts = [str(spec_file)]
-        if (out_dir / "figure_manifest.json").is_file():
-            artifacts.append(str(out_dir / "figure_manifest.json"))
+        if (out_dir / "figure.manifest.json").is_file():
+            artifacts.append(str(out_dir / "figure.manifest.json"))
         for export_path in fig_manifest.get("export_files", {}).values():
             if os.path.isfile(export_path):
                 artifacts.append(str(export_path))

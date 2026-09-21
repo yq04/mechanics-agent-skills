@@ -3,7 +3,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Dependencies](https://img.shields.io/badge/runtime%20deps-zero%20(stdlib%20only)-success.svg)](https://docs.python.org/3/library/)
-[![Tests](https://img.shields.io/badge/tests-101%2F101%20passing%20(100%25%20offline)-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-103%2F103%20passing%20(100%25%20offline)-brightgreen.svg)](tests/)
 
 A domain-tailored research and automation ecosystem engineered for autonomous agents and researchers working in Solid Mechanics, Fracture Mechanics, Elasticity, and Applied Mathematics.
 
@@ -22,7 +22,7 @@ Mechanics Agent Skills provides a unified, production-grade ecosystem of six sta
 - Resumable Workflow Engine: Manages multi-stage DAG pipelines with deterministic SHA-256 hash invalidation, executing only modified stages and preserving unaffected upstream artifacts.
 - 7-Gate Scientific Integrity Pipeline: Enforces mechanical and physical admissibility gates, including constitutive tensor positive-definiteness, stress intensity factor scaling, and boundary condition consistency.
 - Protected Manuscript Polishing: Preserves inline LaTeX math, display equations, citations, and tensor notation while identifying vague physical phrasing and discipline clichés.
-- Calibrated Peer Review: Evaluates manuscripts against top mechanics journal profiles (JMPS, IJSS, EFM, IJF, CMAME) across five dimensions of scientific soundness.
+- Calibrated Peer Review: Evaluates manuscripts against top mechanics journal profiles (JMPS, IJSS, EFM, Acta Mech Sinica) across five dimensions of scientific soundness.
 - Publication-Ready Figures: Generates vector and raster mechanics figures adhering to single-column (85 mm) and double-column (175 mm) standards with automated colormap audits.
 - Self-Contained Distribution: Bundles each skill with vendored core libraries for direct installation into local and global agent stores (`~/.agents/skills`).
 
@@ -71,7 +71,7 @@ flowchart TD
     end
 
     subgraph S5 ["Stage 5: Peer Review Audit"]
-        RA["5-Dimensional Soundness Audit<br/>Calibrated to JMPS / IJSS / EFM"]
+        RA["5-Dimensional Soundness Audit<br/>Calibrated to JMPS / IJSS / EFM / AMS"]
     end
 
     subgraph S6 ["Stage 6: Integrity Audit"]
@@ -141,7 +141,7 @@ The integrity engine evaluates manuscripts and extracted datasets against seven 
 The core framework operates immediately with the Python standard library:
 
 ```bash
-git clone https://github.com/academic-mechanics/mechanics-agent-skills.git
+git clone https://github.com/yq04/mechanics-agent-skills.git
 cd mechanics-agent-skills
 pip install -e .
 ```
@@ -301,7 +301,7 @@ mechanics-polish apply examples/polishing/manuscript.md proposals.json --output 
 Conducts rigorous journal-calibrated peer review across five dimensions: Mathematical Rigor, Theoretical Consistency, Experimental/Computational Validity, Scope & Limits, and Literature Context:
 
 ```bash
-# Audit a manuscript against a target journal profile (e.g. jmps, ijss, efm, ijf, cmame)
+# Audit a manuscript against a target journal profile (e.g. jmps, ijss, efm, acta_mech_sin)
 mechanics-peer-review audit examples/reviewer/manuscript.md --journal jmps --markdown report.md
 
 # Prepare a comprehensive review package for reviewer agents
@@ -421,7 +421,7 @@ tests/test_skill_contracts.py .                                         PASSED
 tests/test_workflow.py ......                                           PASSED
 tests/test_writing.py ....                                              PASSED
 
-============================= 101 passed in 6.06s =============================
+============================= 103 passed in 6.06s =============================
 ```
 
 Test coverage includes:

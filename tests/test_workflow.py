@@ -165,3 +165,17 @@ def test_integrity_cli_check():
     # Run integrity check on run.json
     ret = integrity_cli(["check", "examples/workflow/run.json", "--format", "json"])
     assert ret in (0, 2)
+
+
+def test_workflow_abstract_evidence_has_no_fake_page(temp_wf_dir):
+    wf = MechanicsWorkflow(output_dir=temp_wf_dir / 'evidence_grounding_run')
+    # Run evidence extraction with default papers (which have abstracts)
+    artifacts, findings, metrics, pending, warnings = wf._run_evidence_extraction({})
+    cards_file = wf.output_dir / 'evidence' / 'evidence_cards.json'
+    assert cards_file.is_file()
+    cards_data = json.loads(cards_file.read_text(encoding='utf-8'))
+    assert len(cards_data) > 0
+    for card in cards_data:
+        # Abstract-derived cards must not claim page 1 or non-null pdf_page
+        if card.get('source_type') == 'abstract':
+            assert card.get('pdf_page') is None

@@ -1,3 +1,4 @@
+import math
 import re
 """
 Core Integrity Foundation for Mechanics Research and Data Integrity.
@@ -13,7 +14,12 @@ import hashlib
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
-import numpy as np
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
 
 
 @dataclass
@@ -134,7 +140,7 @@ def audit_data_provenance(data: Any, source_path: Optional[str] = None) -> str:
         raw_bytes = data
     elif isinstance(data, (str, Path)) and Path(str(data)).is_file():
         raw_bytes = Path(str(data)).read_bytes()
-    elif isinstance(data, np.ndarray):
+    elif np is not None and isinstance(data, np.ndarray):
         raw_bytes = np.ascontiguousarray(data).tobytes()
     elif isinstance(data, (dict, list)):
         raw_bytes = json.dumps(data, sort_keys=True, default=str).encode("utf-8")
@@ -155,7 +161,7 @@ def create_data_provenance(data: Any, source_path: Optional[str] = None) -> Data
     count = None
     if isinstance(data, (list, tuple)):
         count = len(data)
-    elif isinstance(data, np.ndarray):
+    elif np is not None and isinstance(data, np.ndarray):
         count = int(data.size)
     return DataProvenance(
         sha256=h,
@@ -175,6 +181,16 @@ def check_constitutive_admissibility(
     and material symmetry admissibility of a stiffness matrix.
     """
     findings: List[Finding] = []
+    if not HAS_NUMPY or np is None:
+        findings.append(
+            Finding(
+                severity="warning",
+                category="G1",
+                message="NumPy is not installed; skipping eigenvalue positive-definiteness calculation.",
+                field="stiffness_matrix",
+            )
+        )
+        return findings
     C = np.array(stiffness_matrix, dtype=float)
 
     if C.ndim != 2 or C.shape[0] != C.shape[1]:
@@ -318,7 +334,7 @@ def check_sif_normalization(
         )
 
     # Detect sqrt(pi) mismatch
-    sqrt_pi = float(np.sqrt(np.pi))  # ~ 1.77245
+    sqrt_pi = float(math.sqrt(math.pi))  # ~ 1.77245
     inv_sqrt_pi = 1.0 / sqrt_pi      # ~ 0.56419
 
     if abs(ratio - sqrt_pi) < 0.08:
@@ -445,7 +461,7 @@ def run_integrity_pipeline(
             if isinstance(ref, (str, Path)) and Path(str(ref)).is_file():
                 prov = create_data_provenance(Path(str(ref)), source_path=str(ref))
                 provenance_records.append(prov)
-            elif isinstance(ref, (dict, list, np.ndarray)):
+            elif isinstance(ref, (dict, list)) or (np is not None and isinstance(ref, np.ndarray)):
                 prov = create_data_provenance(ref, source_path=f"memory_ref_{i}")
                 provenance_records.append(prov)
             elif isinstance(ref, DataProvenance):

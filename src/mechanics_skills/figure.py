@@ -12,11 +12,24 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
-from matplotlib.patches import Ellipse, FancyArrowPatch, Rectangle
-import numpy as np
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Ellipse, FancyArrowPatch, Rectangle
+    HAS_MATPLOTLIB = True
+except ImportError:
+    matplotlib = None
+    plt = None
+    Ellipse = FancyArrowPatch = Rectangle = None
+    HAS_MATPLOTLIB = False
+
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
 
 from mechanics_skills.integrity import (
     Finding,
@@ -221,6 +234,8 @@ def validate_figure_spec(spec: Union[FigureSpec, Dict[str, Any]]) -> List[Findin
 
 def setup_publication_style():
     """Configure publication-grade Matplotlib rcParams (single/double column ready)."""
+    if not HAS_MATPLOTLIB or plt is None:
+        return
     plt.rcParams.update({
         "font.family": "serif",
         "font.serif": ["Times New Roman", "STIXGeneral", "DejaVu Serif"],
@@ -497,6 +512,11 @@ def render_figure(
     out.mkdir(parents=True, exist_ok=True)
 
     findings = validate_figure_spec(d)
+    if not HAS_MATPLOTLIB or not HAS_NUMPY:
+        raise ImportError(
+            "Publication figure rendering requires 'matplotlib' and 'numpy'. "
+            "Install with: pip install 'mechanics-agent-skills[figure]'"
+        )
     setup_publication_style()
 
     layout = d.get("layout", "single_column")

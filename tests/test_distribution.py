@@ -66,3 +66,32 @@ def test_sync_skills_dry_run_and_apply(tmp_path):
     res_apply = sync_skills(source_dir, target_dir, dry_run=False)
     assert res_apply["dry_run"] is False
     assert (target_dir / "test-skill" / "SKILL.md").is_file()
+
+
+def test_sync_skills_backup_and_no_target_mkdir_on_dry_run(tmp_path):
+    source_dir = tmp_path / 'source'
+    target_dir = tmp_path / 'non_existent_target'
+    source_dir.mkdir()
+
+    # Create dummy skill in source
+    dummy_skill = source_dir / 'test-skill'
+    dummy_skill.mkdir()
+    (dummy_skill / 'SKILL.md').write_text('# Test Skill v1', encoding='utf-8')
+
+    # Dry-run on non-existent target should NOT create target_dir
+    res_dry = sync_skills(source_dir, target_dir, dry_run=True)
+    assert not target_dir.exists()
+
+    # Apply creates target_dir and writes file
+    res_apply1 = sync_skills(source_dir, target_dir, dry_run=False)
+    assert (target_dir / 'test-skill' / 'SKILL.md').read_text(encoding='utf-8') == '# Test Skill v1'
+
+    # Modify source file and apply again; verify backup is created
+    (dummy_skill / 'SKILL.md').write_text('# Test Skill v2', encoding='utf-8')
+    res_apply2 = sync_skills(source_dir, target_dir, dry_run=False)
+    assert len(res_apply2['updated_files']) == 1
+    assert len(res_apply2['backups_created']) == 1
+    backup_file = Path(res_apply2['backups_created'][0])
+    assert backup_file.is_file()
+    assert backup_file.read_text(encoding='utf-8') == '# Test Skill v1'
+    assert (target_dir / 'test-skill' / 'SKILL.md').read_text(encoding='utf-8') == '# Test Skill v2'

@@ -29,8 +29,9 @@ class UnpaywallProvider(BaseProvider):
             return OAResult(doi=doi, is_oa=False)
 
         url = f"{self.BASE_URL}/{clean_d}"
-        params = {"email": self.email}
-        headers = {"User-Agent": f"MechanicsUnpaywallBot/3.0 (+mailto:{self.email})"}
+        email = self.email or "unpaywall_client@example.org"
+        params = {"email": email}
+        headers = {"User-Agent": f"MechanicsAgentSkills/3.1.0 (mailto:{email})"}
 
         try:
             resp = self.client.get(url, params=params, headers=headers)
