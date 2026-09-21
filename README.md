@@ -1,81 +1,85 @@
-# Mechanics Agent Skills: Evidence-Anchored Solid Mechanics Research Suite
+[简体中文](README.md) | [English](README_en.md)
+
+# Mechanics Agent Skills: 证据驱动的固体力学研究智能体套件
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Dependencies](https://img.shields.io/badge/runtime%20deps-zero%20(stdlib%20only)-success.svg)](https://docs.python.org/3/library/)
 [![Tests](https://img.shields.io/badge/tests-103%2F103%20passing%20(100%25%20offline)-brightgreen.svg)](tests/)
 
-A domain-tailored research and automation ecosystem engineered for autonomous agents and researchers working in Solid Mechanics, Fracture Mechanics, Elasticity, and Applied Mathematics.
+专门面向**固体力学、断裂力学、弹性力学与应用数学**领域的科研人员与自主智能体（Autonomous Agents）构建的学术全生命周期研究与自动化生态。
 
 ---
 
-## Overview
+## 概述
 
-Engineering research in continuum mechanics presents unique requirements that generic academic search engines and general-purpose language models fail to meet. General search systems lack mechanics-aware taxonomies and miss critical constitutive laws, complex potentials, or singular asymptotic representations. Generalist language models frequently introduce subtle mathematical errors, such as misidentifying tensor symmetries, modifying index conventions, or altering sign conventions in energy release rate expressions.
+连续介质力学的理论与计算研究具有极为严苛的物理和数学要求，通用学术检索工具与普通大语言模型往往难以满足：
+- 通用学术检索缺乏连续介质力学专属本体（Taxonomy），难以精准召回本构定律、复变势函数或渐近奇异场解；
+- 通用大语言模型缺乏严谨的物理护栏，经常自作聪明地“纠正”公式，篡改张量对称性、颠倒单侧位移与裂纹开度，或混淆能量释放率中的符号与因子。
 
-Mechanics Agent Skills provides a unified, production-grade ecosystem of six standardized skills and a resumable workflow engine. The core framework runs with zero required external runtime dependencies, using standard Python libraries for literature search, citation snowballing, text extraction, manuscript polishing, peer review auditing, and scientific integrity verification. Optional extras provide hardware-accelerated PDF rendering, publication-standard vector figure generation, and high-throughput network transport.
+**Mechanics Agent Skills** 提供了一套由六大标准化智能体技能与可恢复工作流引擎组成的生产级生态体系。微内核架构基础能力完全基于 Python 标准库实现，实现**零外部硬性运行时依赖**。文献检索、引文滚雪球、真实页码证据抽取、论文公式锁定润色、模拟顶级期刊评审以及七大科学诚信门禁均可开箱即用；高级出版绘图、硬件加速 PDF 解析与异步网络传输则通过可选依赖优雅降级。
 
-### Core Capabilities
+### 核心特性
 
-- Zero Runtime Dependencies: The core framework relies exclusively on the Python standard library (`urllib`, `sqlite3`, `dataclasses`, `re`, `json`, `hashlib`, `math`, `pathlib`).
-- 6-Skill Standard Suite: Covers the research lifecycle from literature discovery to peer review auditing.
-- Resumable Workflow Engine: Manages multi-stage DAG pipelines with deterministic SHA-256 hash invalidation, executing only modified stages and preserving unaffected upstream artifacts.
-- 7-Gate Scientific Integrity Pipeline: Enforces mechanical and physical admissibility gates, including constitutive tensor positive-definiteness, stress intensity factor scaling, and boundary condition consistency.
-- Protected Manuscript Polishing: Preserves inline LaTeX math, display equations, citations, and tensor notation while identifying vague physical phrasing and discipline clichés.
-- Calibrated Peer Review: Evaluates manuscripts against top mechanics journal profiles (JMPS, IJSS, EFM, Acta Mech Sinica) across five dimensions of scientific soundness.
-- Publication-Ready Figures: Generates vector and raster mechanics figures adhering to single-column (85 mm) and double-column (175 mm) standards with automated colormap audits.
-- Self-Contained Distribution: Bundles each skill with vendored core libraries for direct installation into local and global agent stores (`~/.agents/skills`).
+- **零外部运行时依赖**：微内核仅基于 Python 标准库（`urllib`、`sqlite3`、`dataclasses`、`re`、`json`、`hashlib`、`math`、`pathlib`），绝不在基础导入时强装第三方包。
+- **6 大标准化力学技能**：覆盖文献检索、知识图谱、页码级证据抽取、出版级绘图、公式受保护润色与模拟同行评审的全研究生命周期。
+- **可恢复工作流 DAG 引擎**：基于输入 SHA-256 签名失效机制与系统级原子写入，仅重跑上游被修改的依赖阶段，完整保留不受影响的历史工件。
+- **7 大科学诚信门禁 (G1~G7)**：内置弹性刚度张量正定性检验、应力强度因子 $r^{-1/2}$ 奇异性标度、数据哈希溯源与基准独立性核查。
+- **受保护的论文语言润色**：严格锁定行内/行间 LaTeX 数学公式、引用角标与张量记号，剥离机械的 AI 套话并实施物理混淆护栏。
+- **校准顶级力学期刊的模拟审稿**：依据 *JMPS*、*IJSS*、*EFM*、*Acta Mechanica Sinica* 审稿人评价标准，执行五维学术健全度审计并生成修订台账。
+- **出版级科学绘图引擎**：自动输出符合国际期刊物理尺寸标准（单栏 85 mm、双栏 175 mm）的矢量图与高分辨率位图，内置 Okabe-Ito 色弱友好色盘与数据清单契约。
+- **自包含分发与安全同步**：内置 vendor 核心包机制，支持一键安全部署至全局智能体技能库（`~/.agents/skills`），并自动生成时间戳备份。
 
 ---
 
-## Agent Skills Suite
+## 智能体技能矩阵 (Agent Skills Suite)
 
-The repository provides six standardized skills conforming to the Agent Skills specification:
+代码库提供六个完全符合 Agent Skills 规范的标准化独立技能：
 
-| Skill | Directory | Primary Focus | Key Outputs |
+| 技能名称 | 目录入口 | 核心职责 | 关键产出物 |
 |---|---|---|---|
-| **mechanics-scoping-review** | [mechanics-scoping-review/](mechanics-scoping-review/) | PRISMA-ScR systematic review orchestration, multi-database search, 5D rubric scoring, and citation snowballing | PRISMA flowchart (`.mmd`), BibTeX library (`.bib`), screening audit log (`.json`), review draft (`.md`) |
-| **openalex-database** | [openalex-database/](openalex-database/) | High-throughput exploration of the OpenAlex knowledge graph with polite pool compliance (10 req/s) | Works metadata, author profiles, institutional affiliations, citation graphs |
-| **mechanics-evidence-extraction** | [mechanics-evidence-extraction/](mechanics-evidence-extraction/) | Deep extraction of constitutive tensors ($C_{ijkl}$, $S_{ijkl}$), energy release rates ($G, J, K$), and complex potentials | Page-anchored evidence cards (`.json`), Markdown synthesis matrix (`.md`) |
-| **mechanics-figure** | [mechanics-figure/](mechanics-figure/) | Publication-ready mechanics visualizations adhering to international journal formatting standards | Vector SVG/PDF, 300+ DPI PNG, audit findings log, metadata manifest (`.json`) |
-| **mechanics-paper-polishing** | [mechanics-paper-polishing/](mechanics-paper-polishing/) | Non-destructive manuscript polishing with protected mathematical zones and mechanics cliché detection | Protected zones analysis (`.json`), polished text, character-level diff audit (`.json`) |
-| **mechanics-paper-reviewer** | [mechanics-paper-reviewer/](mechanics-paper-reviewer/) | Journal-calibrated simulated peer review and five-dimensional soundness evaluation | Soundness audit report (`.md`), review package (`.json`), revision comparison (`.json`) |
+| **mechanics-scoping-review** | [mechanics-scoping-review/](mechanics-scoping-review/) | PRISMA-ScR 系统文献综述编排、多数据库检索、五维力学量规打分与引文滚雪球 | PRISMA 流程图 (`.mmd`)、BibTeX 数据库 (`.bib`)、初筛审计日志 (`.json`)、综述草稿 (`.md`) |
+| **openalex-database** | [openalex-database/](openalex-database/) | 全球 2.5 亿学术实体图谱高通量查询（遵守 10 req/s 礼貌池协议） | 论文元数据、学者画像、机构归属、正反向引用图谱 |
+| **mechanics-evidence-extraction** | [mechanics-evidence-extraction/](mechanics-evidence-extraction/) | 真实页码级抽取本构刚度/柔度张量 ($C_{ijkl}, S_{ijkl}$)、能量释放率 ($G, J, K$) 及复变势函数 | 页码级证据卡片 (`.json`)、Markdown 结构化证据矩阵 (`.md`) |
+| **mechanics-figure** | [mechanics-figure/](mechanics-figure/) | 固体力学与断裂力学出版级可视化，严格遵守国际顶刊排版与配色标准 | 矢量 PDF/SVG、300+ DPI PNG、色盘审计日志、数据清单 (`figure.manifest.json`) |
+| **mechanics-paper-polishing** | [mechanics-paper-polishing/](mechanics-paper-polishing/) | 非破坏性论文语言润色，建立 LaTeX 公式保护区并实施力学混淆护栏 | 保护区分析日志 (`.json`)、润色后手稿、字符级差异审计 (`.json`) |
+| **mechanics-paper-reviewer** | [mechanics-paper-reviewer/](mechanics-paper-reviewer/) | 顶刊校准的模拟同行评审，执行五维学术健全度审核与修订跟踪 | 健全度审计报告 (`.md`)、审稿任务包 (`.json`)、多轮修订对比 (`.json`) |
 
 ---
 
-## End-to-End Workflow Architecture
+## 端到端工作流架构 (End-to-End Workflow Architecture)
 
-The research lifecycle is orchestrated as a directed acyclic graph by `mechanics-workflow`:
+全生命周期的科研流转由 `mechanics-workflow` 编排为有向无环图（DAG）：
 
 ```mermaid
 flowchart TD
     classDef stageBox fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1,font-weight:bold;
     classDef gateBox fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#bf360c,font-weight:bold;
 
-    subgraph S1 ["Stage 1: Literature Review"]
-        LR["Multi-Source Search & Screening<br/>Crossref / OpenAlex / arXiv / S2"]
-        PR["PRISMA-ScR Protocol & Snowballing"]
+    subgraph S1 ["第 1 阶段: 文献综述"]
+        LR["多源检索与初筛<br/>Crossref / OpenAlex / arXiv / S2"]
+        PR["PRISMA-ScR 协议编排与引文雪球"]
         LR --> PR
     end
 
-    subgraph S2 ["Stage 2: Evidence Extraction"]
-        EE["Page-Anchored Evidence Extraction<br/>Constitutive Tensors / Formulas / Benchmarks"]
+    subgraph S2 ["第 2 阶段: 证据抽取"]
+        EE["真实页码级证据抽取<br/>本构张量 / 断裂参量 / 外部基准"]
     end
 
-    subgraph S3 ["Stage 3: Figure Generation"]
-        FG["Publication Figure Generation<br/>Stress Contours / SIF Curves / Crack Geometry"]
+    subgraph S3 ["第 3 阶段: 出版绘图"]
+        FG["出版级力学图件生成<br/>应力云图 / SIF 响应曲线 / 裂纹几何"]
     end
 
-    subgraph S4 ["Stage 4: Manuscript Polishing"]
-        MP["Constrained Polish & Protection Zones<br/>LaTeX Math & Notation Guard"]
+    subgraph S4 ["第 4 阶段: 论文润色"]
+        MP["约束论文润色与公式保护<br/>LaTeX 数学区与符号护栏锁定"]
     end
 
-    subgraph S5 ["Stage 5: Peer Review Audit"]
-        RA["5-Dimensional Soundness Audit<br/>Calibrated to JMPS / IJSS / EFM / AMS"]
+    subgraph S5 ["第 5 阶段: 同行评审"]
+        RA["五维学术健全度模拟评审<br/>校准 JMPS / IJSS / EFM 审稿人意见"]
     end
 
-    subgraph S6 ["Stage 6: Integrity Audit"]
-        IA["7-Gate Scientific Integrity Pipeline<br/>Physical Admissibility & Data Provenance"]
+    subgraph S6 ["第 6 阶段: 诚信门禁"]
+        IA["七大科学诚信门禁管线<br/>本构物理容许性与数据溯源链核验"]
     end
 
     PR --> EE
@@ -89,56 +93,51 @@ flowchart TD
     class IA gateBox;
 ```
 
-### Resumable DAG Execution & State Invalidation
+### 可恢复 DAG 调度与状态失效机制
 
-The workflow engine evaluates data dependencies at each stage:
-
-- Every stage calculates an input hash combining upstream artifact signatures, manuscript contents, and stage options.
-- When an upstream stage produces modified outputs, all downstream dependent stages are marked stale and automatically re-executed.
-- Unchanged stages preserve their completed state, eliminating redundant calculations.
-- Stage states, execution timestamps, artifact paths, warnings, and handoff summaries are recorded atomically in `workflow.manifest.json`.
+- **确定性哈希**：每个阶段根据其上游工件数字指纹、手稿文本及配置参数计算专属 SHA-256 输入哈希。
+- **精准重跑**：上游产生改动时，仅关联下游被标记为失效并自动重新执行；未发生变化的阶段直接复用历史完成状态。
+- **系统级原子写入**：所有执行状态、工件路径、警告提示及交接备忘录均通过系统级原子替换持久化至 `workflow.manifest.json`。
 
 ---
 
-## Seven-Gate Scientific Integrity Pipeline
+## 七大科学诚信门禁 (Seven-Gate Pipeline)
 
-The integrity engine evaluates manuscripts and extracted datasets against seven gates designed specifically for continuum mechanics:
+诚信引擎针对连续介质力学研究专门部署了 7 类确定性审计规则：
 
-1. **Gate G1: Constitutive & Symmetry Constraints**
-   - Validates minor and major symmetries of stiffness ($C_{ijkl}$) and compliance ($S_{ijkl}$) tensors.
-   - Verifies positive-definiteness of elasticity tensors through eigenvalue analysis.
-   - Confirms square-root singularity scaling for asymptotic stress intensity factors ($\\sigma \\sim K r^{-1/2}$).
+1. **门禁 G1：本构容许性与标度约束 (Constitutive & Scaling)**
+   - 验证弹性刚度 ($C_{ijkl}$) 与柔度 ($S_{ijkl}$) 张量的主、次对称性。
+   - 通过特征值分析核查弹性张量的正定性（能量热力学稳定性）。
+   - 验证渐近应力强度因子的平方根奇异性标度（$\sigma \sim K r^{-1/2}$）。
 
-2. **Gate G2: Evidence Grounding & Citation Traceability**
-   - Flags claims derived solely from unverified abstracts without primary literature backing.
-   - Verifies bibliographic reference completeness and flags uncited numerical claims.
+2. **门禁 G2：证据来源与引文忠实度 (Evidence Grounding)**
+   - 区分真实 PDF 证据与摘要来源，未阅读全文时禁止标注虚假页码。
+   - 审核文献引用的完整性，拦截缺乏来源支撑的悬空数值结论。
 
-3. **Gate G3: Provenance & Data Traceability**
-   - Computes deterministic SHA-256 digests of all raw simulation datasets and figure inputs.
-   - Audits data availability statements and records explicit provenance hashes in publication manifests.
+3. **门禁 G3：数据出处可溯性 (Data Provenance)**
+   - 为图表原始数据计算确定性 SHA-256 哈希。
+   - 强制将论文插图与模拟数据集进行数据指纹绑定。
 
-4. **Gate G4: Benchmark Independence**
-   - Detects circular benchmarks where proposed models are validated solely against their own calibrations.
-   - Ensures independent comparisons against canonical analytical baselines such as Westergaard or Sneddon solutions.
+4. **门禁 G4：基准独立性 (Benchmark Independence)**
+   - 识别求解器“自我验证”的伪基准闭环。
+   - 确保数值解与真正独立的经典解析解（如 Sneddon、Westergaard 解）进行比对。
 
-5. **Gate G5: Phenomenological Discrepancy Verification**
-   - Screens for numerical artifacts or mesh convergence issues reported erroneously as novel physical phenomena.
+5. **门禁 G5：伪物理现象防范 (Phenomenological Verification)**
+   - 筛查由网格畸变、奇异性截断误差引发的数值假象，防止将数值振荡误报为物理新机理。
 
-6. **Gate G6: Dimensional & Assumption Consistency**
-   - Identifies contradictions between kinematic assumptions such as plane stress versus plane strain.
-   - Audits out-of-plane constraint definitions and boundary condition compatibility.
+6. **门禁 G6：运动学与量纲一致性 (Dimensional & Kinematic)**
+   - 审查平面应力与平面应变假设之间可能存在的逻辑矛盾，核查面外约束与边界条件相容性。
 
-7. **Gate G7: Scope & Generalization Boundary**
-   - Enforces explicit reporting of validity boundaries including small-scale yielding limits and linear elasticity cutoffs.
-   - Flags unauthorized extrapolation beyond validated asymptotic or material regimes.
+7. **门禁 G7：适用范围与极限假设锁定 (Scope & Boundary)**
+   - 强制标明小范围屈服准则与线弹性截止阈值等有效性边界，防止向未经验证的非线性区域过度外推。
 
 ---
 
-## Quick Installation
+## 快速安装与依赖分层
 
-### Standard Installation (Zero Dependencies)
+### 1. 基础微内核安装（零依赖运行）
 
-The core framework operates immediately with the Python standard library:
+基础微内核仅需 Python 3.10+ 标准库即可完整运行：
 
 ```bash
 git clone https://github.com/yq04/mechanics-agent-skills.git
@@ -146,76 +145,74 @@ cd mechanics-agent-skills
 pip install -e .
 ```
 
-### Optional Extras
+### 2. 可选扩展依赖安装
 
-Install optional dependencies to enable specialized capabilities:
+根据研究任务按需选装功能增强包：
 
 ```bash
-# Publication figure rendering (matplotlib, numpy)
+# 安装出版级力学绘图支持 (matplotlib, numpy)
 pip install -e ".[figure]"
 
-# Accelerated PDF extraction (PyMuPDF)
+# 安装硬件加速 PDF 二进制流解析 (PyMuPDF)
 pip install -e ".[pdf]"
 
-# High-throughput asynchronous HTTP transport (httpx)
+# 安装高通量异步 HTTP 传输加速 (httpx)
 pip install -e ".[http]"
 
-# Complete development and testing environment
+# 一键安装全套开发、测试与渲染依赖
 pip install -e ".[dev,figure,pdf,http]"
 ```
 
 ---
 
-## CLI Reference
+## CLI 命令行工具速查
 
-The package installs ten command-line entry points alongside the unified `mechanics-skills` dispatcher:
+套件提供了统一的总入口 `mechanics-skills` 及 10 个独立命名的专业命令：
 
-### Unified Dispatcher (`mechanics-skills`)
-
-Run any subcommand through the primary entry point:
+### 统一调度入口 (`mechanics-skills`)
 
 ```bash
 mechanics-skills <command> [options]
 ```
 
-Supported subcommands: `search`, `citations`, `oa`, `extract`, `review`, `figure`, `polish`, `peer-review`, `integrity`, `workflow`.
+支持的子命令包括：`search`, `citations`, `oa`, `extract`, `review`, `figure`, `polish`, `peer-review`, `integrity`, `workflow`。
 
 ---
 
-### 1. Multi-Source Literature Retrieval (`mechanics-search`)
+### 1. 多源文献检索 (`mechanics-search`)
 
-Searches across Crossref, OpenAlex, arXiv, and Semantic Scholar with automatic DOI deduplication and mechanics taxonomy expansion:
+跨 Crossref、OpenAlex、arXiv 与 Semantic Scholar 进行联合检索，自动去重并扩展力学专属本体：
 
 ```bash
-# Query literature across default databases
+# 检索特定课题文献
 mechanics-search "anisotropic interface crack" --limit 15
 
-# Expand query with continuum mechanics taxonomy terms
+# 自动激活力学本体术语扩展
 mechanics-search "Stroh formalism" --expand --format markdown
 
-# Save results to JSON and Markdown summary table
+# 保存为 JSON 数据集与 Markdown 摘要表
 mechanics-search "phase field fracture toughness" --output results.json --markdown summary.md
 ```
 
 ---
 
-### 2. Citation Snowballing & Main Path (`mechanics-citations`)
+### 2. 引文滚雪球与主路径分析 (`mechanics-citations`)
 
-Traverses forward and backward citation networks through OpenAlex, identifies developmental trajectories, and exports network diagrams:
+通过 OpenAlex 知识图谱遍历双向引文网络，提取学科发展的主拓扑路径：
 
 ```bash
-# Analyze citation trajectory for a foundational mechanics paper
+# 分析力学奠基性论文的发展主路径
 mechanics-citations "10.1016/0020-7683(83)90045-8" --limit 20
 
-# Export citation network diagram to Mermaid
+# 导出 Mermaid 格式的引文网络图
 mechanics-citations "10.1016/0020-7683(83)90045-8" --format mermaid --mermaid network.mmd
 ```
 
 ---
 
-### 3. Open Access PDF Discovery (`mechanics-oa`)
+### 3. 合法开放获取 PDF 探测 (`mechanics-oa`)
 
-Locates verified legal Open Access PDFs using Unpaywall and OpenAlex fallback:
+通过 Unpaywall 与 OpenAlex 探测合法开放获取的全文 PDF 链接：
 
 ```bash
 mechanics-oa "10.1016/j.engfracmech.2020.107000"
@@ -223,23 +220,23 @@ mechanics-oa "10.1016/j.engfracmech.2020.107000"
 
 ---
 
-### 4. Evidence & Formula Extraction (`mechanics-extract`)
+### 4. 页码级证据与公式抽取 (`mechanics-extract`)
 
-Extracts constitutive tensors, defect geometry parameters, energy release rate expressions, and benchmark comparison tables:
+从文献中高保真抽取本构张量、缺陷几何参数、能量释放率公式与数值对比表：
 
 ```bash
-# Extract evidence cards from a research PDF
+# 从学术 PDF 抽取结构化力学证据卡片
 mechanics-extract paper.pdf --doi "10.1016/j.jmps.2021.104432" --output evidence.json --markdown matrix.md
 
-# Extract evidence from plain text or OCR output
+# 从文本块或 OCR 结果中抽取
 mechanics-extract document.txt --title "Stroh Formulation for Anisotropic Wedges" --format markdown
 ```
 
 ---
 
-### 5. End-to-End PRISMA Scoping Review (`mechanics-review`)
+### 5. PRISMA 系统综述全流程编排 (`mechanics-review`)
 
-Executes the complete PRISMA-ScR protocol, including multi-database search, 5D rubric screening, BibTeX generation, and flowchart synthesis:
+一键跑通多数据库检索、五维力学量规筛选、BibTeX 文献库生成与 PRISMA 流程图绘制：
 
 ```bash
 mechanics-review "anisotropic interface crack fracture mechanics" \
@@ -248,162 +245,136 @@ mechanics-review "anisotropic interface crack fracture mechanics" \
   --output-dir ./review_artifacts
 ```
 
-Generated outputs in `./review_artifacts`:
-
-- `prisma_flowchart.mmd`: Publication-ready PRISMA flowchart in Mermaid format.
-- `references.bib`: Deduplicated, verified BibTeX records for included studies.
-- `screening_log.json`: Screening audit log containing 5D rubric evaluation scores.
-- `review_draft.md`: Narrative synthesis with structured evidence tables.
-
 ---
 
-### 6. Publication Figure Generation (`mechanics-figure`)
+### 6. 出版级科学绘图生成 (`mechanics-figure`)
 
-Generates publication-standard mechanics visualizations with strict adherence to dimensional and accessibility requirements:
+依据国际顶刊排版规范，自动渲染力学矢量图件：
 
 ```bash
-# Render figure from a FigureSpec JSON configuration
+# 根据 FigureSpec 配置文件渲染完整图件（输出 PDF/SVG/PNG/清单）
 mechanics-figure render examples/figures/sif/spec.json --output-dir artifacts/figures
 
-# Validate a FigureSpec before rendering
+# 在渲染前执行规格与色盘审计校验
 mechanics-figure validate examples/figures/sif/spec.json
 
-# Generate a starter FigureSpec template for a specific figure type
+# 生成指定力学模板的初始配置范例
 mechanics-figure template sif_curve --output spec_template.json
 ```
 
-Available templates: `sif_curve`, `stress_contour`, `interaction_heatmap`, `asymptotic_comparison`, `crack_geometry`.
+预置模板支持：`sif_curve`（SIF 曲线）、`stress_contour`（应力云图）、`interaction_heatmap`（相互作用热图）、`asymptotic_comparison`（渐近与全场对比）、`crack_geometry`（裂纹几何拓扑）。
 
 ---
 
-### 7. Constrained Manuscript Polishing (`mechanics-polish`)
+### 7. 受约束论文语言润色 (`mechanics-polish`)
 
-Improves manuscript prose while safeguarding mathematical expressions, citations, and physical notation conventions:
+在不改变物理原意、不损坏数学表达式的前提下进行专业学术润色：
 
 ```bash
-# Analyze manuscript for protected zones, cliches, and notation warnings
+# 分析论文中的 LaTeX 公式保护区、机械套话与术语风险
 mechanics-polish analyze examples/polishing/manuscript.md --conventions examples/polishing/conventions.json
 
-# Prepare a structured proposal generation package for language models
+# 为大语言模型生成结构化提议任务包
 mechanics-polish prepare examples/polishing/manuscript.md --output-dir artifacts/polishing
 
-# Validate edit proposals against protected zones
+# 校验修改提议是否触碰保护区或物理禁区
 mechanics-polish validate examples/polishing/manuscript.md proposals.json
 
-# Safely apply validated edit proposals and generate diff records
+# 安全应用修改提议并输出修改台账与字符级 diff
 mechanics-polish apply examples/polishing/manuscript.md proposals.json --output polished_paper.md --diff diffs.json
 ```
 
 ---
 
-### 8. Simulated Peer Review & Soundness Audit (`mechanics-peer-review`)
+### 8. 模拟同行评审与健全度审计 (`mechanics-peer-review`)
 
-Conducts rigorous journal-calibrated peer review across five dimensions: Mathematical Rigor, Theoretical Consistency, Experimental/Computational Validity, Scope & Limits, and Literature Context:
+模拟顶级期刊（*JMPS*、*IJSS*、*EFM*、*Acta Mech Sinica*）审稿标准执行深度学术评估：
 
 ```bash
-# Audit a manuscript against a target journal profile (e.g. jmps, ijss, efm, acta_mech_sin)
+# 依据指定期刊量规审计论文手稿
 mechanics-peer-review audit examples/reviewer/manuscript.md --journal jmps --markdown report.md
 
-# Prepare a comprehensive review package for reviewer agents
+# 导出供审稿智能体使用的结构化审稿包
 mechanics-peer-review prepare examples/reviewer/manuscript.md --journal jmps --output-dir artifacts/review_pkg
 
-# Compare a revised manuscript against previous review findings
+# 智能对比多轮修改手稿与历史意见落实情况
 mechanics-peer-review compare previous_review.json revised_manuscript.md --output comparison.json
-
-# Render an existing review audit JSON as a Markdown report
-mechanics-peer-review report review_audit.json --output report.md
 ```
 
 ---
 
-### 9. Seven-Gate Scientific Integrity Audit (`mechanics-integrity`)
+### 9. 七大科学诚信审计管线 (`mechanics-integrity`)
 
-Audits manuscripts or workflow run configurations through the complete 7-gate scientific integrity pipeline:
+在最终定稿或出图前执行严密的力学与物理合规检查：
 
 ```bash
-# Run integrity check on a manuscript
+# 针对论文手稿执行门禁检查
 mechanics-integrity check examples/reviewer/manuscript.md
 
-# Run integrity check on a workflow run configuration
+# 针对工作流运行配置文件执行全门禁检查
 mechanics-integrity check examples/workflow/run.json --format json --output integrity_report.json
 ```
 
-Exit codes indicate audit readiness:
-
-- `0`: Pass (Ready for author review).
-- `2`: Needs evidence (minor warnings present).
-- `4`: Blocked (critical physical or mathematical violations detected).
-
 ---
 
-### 10. Resumable Research Workflow Engine (`mechanics-workflow`)
+### 10. 可恢复科研工作流引擎 (`mechanics-workflow`)
 
-Executes and manages the end-to-end multi-stage research lifecycle:
+管理端到端科研生命周期，支持中断恢复与增量执行：
 
 ```bash
-# Execute full workflow from configuration
+# 从配置文件启动完整工作流
 mechanics-workflow run examples/workflow/run.json --output-dir artifacts/workflow-run
 
-# Run workflow in offline deterministic mode using local fixtures
+# 以完全确定性的离线模式运行（使用本地固化数据源）
 mechanics-workflow run examples/workflow/run.json --offline
 
-# Resume an existing workflow run from manifest
+# 从中断或更新的清单中恢复工作流
 mechanics-workflow resume artifacts/workflow-run/workflow.manifest.json
 
-# Check current execution status of a workflow run
+# 查询当前工作流各阶段执行状态与哈希记录
 mechanics-workflow status artifacts/workflow-run/workflow.manifest.json
 ```
 
 ---
 
-## Standalone Skill Packaging & Distribution
+## 独立技能打包与全局分发
 
-Each skill can be packaged into an independent, self-contained directory that vendors `mechanics_skills` inside its `scripts/_vendor/` directory. This allows agent systems (such as Codex, Claude Code, Cursor, and OpenDevin) to invoke any skill directly without requiring package pre-installation.
+每个技能均可打包为自包含的独立目录，核心库自动 vendor 到其内部的 `scripts/_vendor/mechanics_skills/`，无需宿主环境预装即可直接分发并供 Codex、Claude Code、Cursor 或 OpenDevin 运行。
 
-### Rebuilding Bundles
-
-To build self-contained bundles and zip archives for all six skills:
+### 重新构建技能包
 
 ```bash
 python tools/build_skill_bundles.py --out dist/skills
 ```
 
-### Global Synchronization
-
-To build and synchronize all skill bundles directly to the user's global agent skills store (`~/.agents/skills`):
+### 全局同步部署（安全带备份）
 
 ```bash
-python tools/build_skill_bundles.py --sync-global
-```
-
-Alternatively, use the standalone synchronization utility to inspect or dry-run changes:
-
-```bash
-# Inspect pending skill updates
+# 查看同步差异与哈希变动（Dry Run，不写入任何磁盘改动）
 python tools/sync_skills.py --source dist/skills --target ~/.agents/skills --dry-run
 
-# Apply updates to target directory
+# 执行安全同步（覆盖前自动将旧版归档至 .backups/ 目录）
 python tools/sync_skills.py --source dist/skills --target ~/.agents/skills --apply
 ```
 
 ---
 
-## Verification & Testing
+## 质量验证与自动化测试
 
-The test suite validates deterministic offline behavior across all components with 100% mocked network isolation:
+测试套件采用 100% 离线隔离的确定性验证方案，覆盖多数据源解析、五维量规、引文拓扑、公式保护、出版绘图及七大门禁：
 
 ```bash
-# Run complete test suite
+# 运行完整自动化测试套件
 python -m pytest tests/ -v
 ```
 
 ```text
 ============================= test session starts =============================
 platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
-collected 101 items
+collected 103 items
 
 tests/test_citations.py ...................................             PASSED
-tests/test_distribution.py ...                                          PASSED
+tests/test_distribution.py ....                                         PASSED
 tests/test_e2e.py .                                                     PASSED
 tests/test_extraction.py ...                                            PASSED
 tests/test_figure.py ..........                                         PASSED
@@ -418,38 +389,25 @@ tests/test_reviewer.py .......                                          PASSED
 tests/test_screening.py .....                                           PASSED
 tests/test_search.py ......                                             PASSED
 tests/test_skill_contracts.py .                                         PASSED
-tests/test_workflow.py ......                                           PASSED
+tests/test_workflow.py .......                                          PASSED
 tests/test_writing.py ....                                              PASSED
 
-============================= 103 passed in 6.06s =============================
+============================= 103 passed in 5.64s =============================
 ```
 
-Test coverage includes:
+---
 
-- Multi-source provider parsing and error handling (Crossref, OpenAlex, arXiv, Semantic Scholar, Unpaywall).
-- Deduplication keys, normalized DOIs, and fuzzy title matching.
-- 5-Dimensional screening rubrics and PRISMA counter state transitions.
-- Citation snowballing, SPC topological link weights, and main path extraction.
-- Page-anchored evidence extraction from PDFs and plain text.
-- Publication figure validation, DPI scaling, and colormap auditing.
-- Mathematical protection zone boundaries, mechanics cliché detection, and safe edit application.
-- Journal-calibrated peer review scoring, soundness auditing, and revision comparison.
-- 7-Gate scientific integrity pipeline and physical admissibility checks.
-- Workflow DAG scheduling, input hashing, and manifest persistence.
-- Skill bundle discovery, vendoring, and global distribution synchronization.
+## 详细架构与技术文档
+
+如需查阅深层理论架构、外部接口配额或分发部署细节，请参考 `docs/` 目录下的专门规范：
+
+- [系统架构与拓扑设计 (System Architecture)](docs/architecture.md)：深入阐述微内核设计、模块间交互协议、七大科学诚信门禁算法及可恢复 DAG 状态机。
+- [学术数据源策略与接口规范 (Provider Policies)](docs/provider-policy.md)：详细记录 Crossref、OpenAlex、arXiv、Semantic Scholar 及 Unpaywall 的频率限制、礼貌池标头要求及游标分页规则。
+- [自包含打包与全局分发规范 (Distribution Guide)](docs/distribution.md)：阐述核心库 vendor 注入、独立压缩包打包流程与非破坏性全局目录同步策略。
+- [功能状态与依赖矩阵 (Capability Status)](docs/capability-status.md)：列明标准库微内核与各可选扩展包在运行时的详细功能对应表与当前已知边界。
 
 ---
 
-## Documentation
+## 开源许可证
 
-For comprehensive architectural design, provider protocol constraints, and packaging guides, see:
-
-- [System Architecture & Topology](docs/architecture.md): Microkernel structure, component interactions, 7-gate scientific integrity rules, and resumable DAG scheduling.
-- [Academic Provider Policies & Etiquette](docs/provider-policy.md): Rate limits, polite headers, cursor pagination, and protocol requirements for Crossref, OpenAlex, arXiv, Semantic Scholar, and Unpaywall.
-- [Standalone Packaging & Global Synchronization](docs/distribution.md): Vendoring mechanism, bundle generation, and non-destructive deployment to ~/.agents/skills.
-
----
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
+本项目采用宽松商业友好的 [MIT License](LICENSE) 许可证。

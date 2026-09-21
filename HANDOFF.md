@@ -102,7 +102,11 @@
 ### 2.6 测试套件与验证
 - **测试覆盖**：18 个测试文件、103 个测试用例，覆盖全部检索、缓存、ID 解析、提取、绘图、润色、评审、门禁、打包与工作流。
 - **测试结果**：`python -m pytest -q` **103 passed in 5.64s, 0 failed, 100% 绿色全通**。
-- **Git 状态**：工作区 clean，全部提交已同步至 GitHub 远端仓库（master 分支，commit `a733eb7`）。
+### 2.7 仓库中英双语文档与 GitHub 远端同步 (Bilingual Landing & Remote Push)
+- **Astra 方案制定**：依据用户指令调用 `gpt-6-astra`（`astra_architect`）产出 `plans/2026-09-21-bilingual-readme-plan.md`，确立默认简体中文、双语互链导航、契约边界及 103 项测试真实记录。
+- **默认简体中文首页 (`README.md`)**：以顶级力学学术与开源工程标准全面重构，顶部嵌入 `[简体中文](README.md) | [English](README_en.md)` 导航栏，详述六大技能矩阵、10 项统一 CLI 命令、Mermaid DAG 编排流程、七大科学诚信门禁（G1~G7）与离线 103/103 绿色测试口径。
+- **完整英文版文档 (`README_en.md`)**：提供等价完备的英文技术与学术文档，保证国际化科研人员与海外开源社区的无障碍接入。
+- **远端同步**：本地代码、双语 README、执行计划与交接文档均已全量提交并推送到 GitHub 远端仓库（`origin/master`）。
 
 ---
 
