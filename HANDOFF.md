@@ -1,8 +1,8 @@
 # Mechanics Agent Skills 任务交接与全景文档 (HANDOFF.md)
 
 > **文档面向对象**：完全没有前期上下文的新会话 / 接手 Agent。  
-> **最后更新时间**：2026-09-21  
-> **当前代码库版本**：v3.1.0 (最新提交 commit `a733eb7`)  
+> **最后更新时间**：2026-09-22  
+> **当前代码库版本**：v3.1.0 (中英双语文档与 GitHub 远端同步完成，Astra 技能深度审查完成)  
 > **代码仓库**：https://github.com/yq04/mechanics-agent-skills.git  
 > **本地工作区**：`D:\1_Research\AI_Workspace\mechanics-agent-skills`  
 > **全局技能目录**：`C:\Users\Administrator\.agents\skills\`
@@ -106,20 +106,39 @@
 - **Astra 方案制定**：依据用户指令调用 `gpt-6-astra`（`astra_architect`）产出 `plans/2026-09-21-bilingual-readme-plan.md`，确立默认简体中文、双语互链导航、契约边界及 103 项测试真实记录。
 - **默认简体中文首页 (`README.md`)**：以顶级力学学术与开源工程标准全面重构，顶部嵌入 `[简体中文](README.md) | [English](README_en.md)` 导航栏，详述六大技能矩阵、10 项统一 CLI 命令、Mermaid DAG 编排流程、七大科学诚信门禁（G1~G7）与离线 103/103 绿色测试口径。
 - **完整英文版文档 (`README_en.md`)**：提供等价完备的英文技术与学术文档，保证国际化科研人员与海外开源社区的无障碍接入。
-- **远端同步**：本地代码、双语 README、执行计划与交接文档均已全量提交并推送到 GitHub 远端仓库（`origin/master`）。
+- **远端同步**：本地代码、双语 README、执行计划与交接文档均已全量提交并推送到 GitHub 远端仓库（`origin/master`，提交哈希 `2342948`）。
+
+### 2.8 GPT-6 Astra 技能适用性、信息量与架构解耦审查
+派发 `gpt-6-astra`（`astra_architect`）在 scheme 模式下对全库进行了彻底的架构审查，产出 [plans/2026-09-21-skills-suitability-and-bloat-audit.md](plans/2026-09-21-skills-suitability-and-bloat-audit.md)，形成关键结论：
+1. **形态定位合适**：纯 Prompt 无法抵抗力学公式幻觉与伪造引用；纯 Python 库缺乏意图理解与量规引导。本项目“确定性微内核 + 领域专用 Skills”的混合架构完全成立且必要。
+2. **信息量事实查验**：力学专属技能极其紧凑（SKILL.md 仅 58~93 行，7/10 份 references 仅 20~49 行），全库普遍臃肿并不成立；主要膨胀集中在 `openalex-database`（SKILL.md 达 494 行，含过时依赖与商业推荐）。
+3. **发现 4 处隐藏失配**：
+   - 三项技能（`figure`, `polishing`, `reviewer`）的 `SKILL.md` 漏链了对对应 `references/` 的路由；
+   - `scoping-review` 的通用初筛量规硬编码了 TI/多裂纹偏好，需要抽离为显式课题 profile；
+   - `extraction_guidelines.md` 将 $w$ 称为总跳跃，与 `polishing_guidelines.md` 的 $\mathrm{COD}=2w$（$w$ 为单侧位移）存在定义冲突；
+   - `review_cli.py` 仍向摘要传 `page_number=1`，而 `workflow.py` 已修复为 `null/abstract`，存在 CLI 与 DAG 间代码漂移。
+4. **分发体积查实**：`dist/skills` 共 199 个文件（2.54 MiB），其中 162 个 `.py`（1.87 MiB）为 6 份 vendor 副本。此为磁盘重复，不占用 LLM 上下文；长期建议支持 standalone 与 shared 双分发模式。
+5. **制定精简重构路线（S0~S6）**。
 
 ---
 
 ## 三、 当前卡在哪 / 遗留事项 (Current Status & Leftovers)
 
-当前**无任何阻塞性 Bug 或未提交代码**。系统底层与技能生态已完成闭环。
+当前**无任何阻塞性 Bug 或未提交代码**。系统底层与技能生态已完成闭环，远端已与本地完全同步。
 
-目前处于**真实课题案例试跑（Pilot Run）与发行候选（Release Candidate）准备阶段**：
-1. **S6 阶段（小型真实案例试跑）留存**：
+当前处于**精简重构（S1~S5）与真实课题案例试跑（S6）的待启动阶段**：
+1. **Astra 审查建议的精简与解耦待实施（S1~S5）**：
+   - S1 (P0)：清理 OpenAlex 过时参数/商业导流；统一 $w/\mathrm{COD}$ 符号约定；修复 `review_cli.py` 摘要页码漂移。
+   - S2 (P1)：OpenAlex `SKILL.md` 瘦身至 80~120 行；补齐三项技能对 references 的按需读取路由。
+   - S3 (P1)：将 TI/多裂纹专用量规抽离为独立课题 profile（`profiles/ti-crack-interaction.json`）。
+   - S4 (P2)：工作流解耦为可选子阶段配方（`--recipe literature-only` 等）。
+   - S5 (P2)：按需引入集中安装与独立打包双分发模式。
+2. **S6 阶段（小型真实案例试跑）留存**：
    - 目前所有 103 项测试均为离线 deterministic fixture/mock。
    - 遗留任务：可根据用户当前正在研究的具体力学课题（例如 Fabrikant TI 介质中的 Penny-shaped 裂纹、各向异性界面断裂），构造一组包含 1~3 篇真实文献 PDF、真实刚度张量与解析 SIF 曲线的小型示例，完整跑通端到端工作流并导出 `artifacts/pilot-run/`。
-2. **发布候选版本号**：
+3. **发布候选版本号**：
    - 随 S6 案例完成后，可发布 v3.1.1 正式 Release Tag。
+
 
 ---
 
@@ -127,7 +146,18 @@
 
 新会话接手后，建议按以下步骤继续推进：
 
-### 阶段 1：用户课题定向案例接入（S6）
+### 阶段 1：执行高优先级精简与规则对齐（S1~S2，约 1 工作日）
+- [ ] **清理 OpenAlex**：移除 requests 必装声明、纠正 per_page 限制、剥离 K-Dense 商业导流，将 `openalex-database/SKILL.md` 精简至约 100 行。
+- [ ] **统一学术符号与证据页码**：
+  * 修改 `extraction_guidelines.md`，明确对齐 $w$ 为单侧位移跳跃、$\mathrm{COD}=2w$；
+  * 修复 `src/mechanics_skills/cli.py` 中 review 相关的摘要抽取调用，同步传递 `source_type="abstract", pdf_page=None`。
+- [ ] **补齐技能 references 路由**：在 `mechanics-figure`、`mechanics-paper-polishing`、`mechanics-paper-reviewer` 的 `SKILL.md` 中添加按需加载指南的明确触发条件。
+
+### 阶段 2：课题 Profile 抽离与工作流解耦（S3~S4，约 1~2 工作日）
+- [ ] 将 TI 介质与多裂纹相互作用专属量规从 `screening.py` 的通用逻辑剥离，建立通用力学初筛 + 显式专题 profile 机制。
+- [ ] 为 `workflow.py` 增加子阶段支持，允许单独执行 `literature`、`figure`、`polish` 等单一环节。
+
+### 阶段 3：用户课题定向案例接入（S6）与发布收口
 - [ ] 与用户确认当前的具体研究案例输入（例如：TI 介质共线裂纹相互作用、或单裂纹 SIF 渐近基准）。
 - [ ] 将真实文献 PDF 或结构化文本放入案例目录，配置 `run.json`。
 - [ ] 运行端到端工作流：`mechanics-workflow run <case-config> --output-dir artifacts/pilot-case`。
@@ -169,10 +199,10 @@
   * 把单侧位移 $w$ 强制改成开度 $\mathrm{COD}$，或者把 $\mathrm{COD}$ 误当成单侧位移导致开度翻倍；
   * 把断裂力学中的应力强度因子小 $k_I$ 与大 $K_I$ 搞混（两者的定义差了 $\sqrt{\pi}$ 因子）；
   * 把工程剪应变 $\gamma_{xy}$ 与张量剪应变 $\varepsilon_{xy}$ 搞混（差了 2 倍）。
-- **铁律**：润色工具必须严格保护 LaTeX 区域与符号映射表，遇有歧义时标记为 `unknown` 或生成修改建议，绝对不可在未经人工确认下自动篡改公式。
+- **铁律**：润色工具必须严格保护 LaTeX 区域与符号映射表，遇有歧义时标记为 `unknown` 或生成修改建议，绝对不可在未经人工确认下自动篡改公式。不同指南文件间的符号公理必须保持全局绝对一致（如 extraction 与 polishing 不得存在 $w$ 与 $\mathrm{COD}$ 的定义冲突）。
 
 ### 7. 严谨的学术证据定位（拒绝虚假页码）
-- **踩坑**：历史代码中，若文献只有摘要，提取时顺手给了 `page_number=1`，造成了事实上的“伪造证据页码”。
+- **踩坑**：历史代码中，若文献只有摘要，提取时顺手给了 `page_number=1`，造成了事实上的“伪造证据页码”。且在 `workflow.py` 修复后，`cli.py` 的 review 分支仍遗留了 `page_number=1` 的漂移。
 - **铁律**：在 `extraction.py` 与 `workflow.py` 中，必须严格区分 `abstract` 与 `pdf_page`。未读取真实 PDF 的证据，其页码必须忠实标记为 `null / unknown`，`source_type` 必须为 `abstract`。
 
 ### 8. 验证与审查节约准则 (Stop on Green)
